@@ -29,6 +29,7 @@ app.post("/signup", function (req, res) {
     res.json({
         message: "You are signed up!"
     });
+    console.log(users);
 });
 
 // Signin route
@@ -36,12 +37,14 @@ app.post("/signin", function (req, res) {
     const username = req.body.username;
     const password = req.body.password;
 
-    const foundUser = users.find(function (u) {
-        return u.username === username && u.password === password;
-    });
+    // Find the user in the users array
+    const foundUser = users.find((u) => u.username === username && u.password === password);
 
     if (foundUser) {
+        // Generate a token and store it in the user object
         const token = generateToken();
+        foundUser.token = token;
+
         res.json({
             message: "You are signed in!",
             token: token
@@ -51,7 +54,12 @@ app.post("/signin", function (req, res) {
             message: "Invalid username or password."
         });
     }
+    console.log(users);
 });
+app.get("/users", function (req, res) {
+    res.json(users);
+});
+
 
 // Start the server
 app.listen(port, () => {
