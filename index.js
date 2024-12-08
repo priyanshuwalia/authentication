@@ -56,8 +56,27 @@ app.post("/signin", function (req, res) {
     }
     console.log(users);
 });
+
 app.get("/users", function (req, res) {
     res.json(users);
+});
+
+app.get("/me", function (req, res) {
+    const token = req.headers.token; // Extract token from authorization header
+
+    // Find the user with the matching token
+    const foundUser = users.find((user) => user.token === token);
+
+    if (foundUser) {
+        res.json({
+            username: foundUser.username,
+            password: foundUser.password,
+        });
+    } else {
+        res.status(401).json({
+            message: "Invalid token.",
+        });
+    }
 });
 
 
